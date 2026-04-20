@@ -10,11 +10,10 @@ public class Result<T> {
     private Integer code;
     private String msg;
     private T data;
-    static ResultCode rc = new ResultCode();
     public static <T> Result<T> success(T data){
-        return of(200, "ok", data);
+        return of(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(), data);
     }
-    public static <T> Result<T> fail(T data){
+    public static <T> Result<T> fail(ResultCode rc){
         return of(rc.getCode(), rc.getMsg(), null);
     }
 }
