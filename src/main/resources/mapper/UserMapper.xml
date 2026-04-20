@@ -11,6 +11,7 @@
     <resultMap id="UserResultMap" type="com.ticket.user.entity.UserEntity">
         <id     column="id"            property="id"/>
         <result column="username"      property="username"/>
+        <result column="password" property="password"/>
         <result column="password_hash" property="passwordHash"/>
         <result column="phone"         property="phone"/>
         <result column="real_name"     property="realName"/>
@@ -32,14 +33,12 @@
         INSERT INTO t_user (
             username,
             password_hash,
-            password_salt,
             phone,
             real_name,
             status
         ) VALUES (
                      #{username},
                      #{passwordHash},
-                     #{passwordSalt},
                      #{phone},
                      #{realName},
                      #{status}
@@ -54,7 +53,7 @@
     <select id="findByUsername"
             parameterType="java.lang.String"
             resultMap="UserResultMap">
-        SELECT id, username, password_hash, password_salt,
+        SELECT id, username, password_hash,
                phone, real_name, status, created_at, updated_at
         FROM t_user
         WHERE username = #{username}

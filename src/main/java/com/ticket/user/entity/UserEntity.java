@@ -11,6 +11,24 @@ public class UserEntity {
     private String realName;
     private int id;
     private String passwordHash;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    private String password;
     private Date createdAt;
     private Date updatedAt;
 

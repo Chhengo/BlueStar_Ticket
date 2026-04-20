@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
         //2.构建账户
         UserEntity user = new UserEntity();
         user.setUsername(req.getUsername());
-        user.setPasswordHash(req.getPassword());
+        user.setPasswordHash(encoder.encode(req.getPassword()));
         user.setPhone(req.getPhone());
         user.setRealName(req.getRealName());
         user.setStatus(1);
@@ -59,6 +59,6 @@ public class UserServiceImpl implements UserService {
         //3.生成token凭证
         String token = jwtUtil.generate(user.getId(), user.getUsername());
         log.info("用户登录成功: userId={}, username={}", user.getId(), user.getUsername());
-        return new UserLoginResponse(token, expireTime);
+        return new UserLoginResponse(token, expireTime, user.getUsername());
     }
 }

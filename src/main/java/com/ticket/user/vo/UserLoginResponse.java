@@ -5,9 +5,10 @@ public class UserLoginResponse {
     private String username;
     private Long expiretime;
 
-    public UserLoginResponse(String token,Long expiretime) {
+    public UserLoginResponse(String token, Long expiretime, String username) {
         this.token = token;
         this.expiretime = expiretime;
+        this.username = username;
     }
 
     public String getToken() {

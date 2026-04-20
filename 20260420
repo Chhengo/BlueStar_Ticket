@@ -63,3 +63,37 @@ Security 配置写法未与时俱进：一开始直接用 Spring Security 5.x �
 ✅ 搭建了一套符合 Spring Security 6.x 规范的 JWT 认证体系。
 ✅ 消除了所有弃用警告和基础代码漏洞。
 整个过程虽然踩了很多坑，但你从 “需求模糊、技术盲区”，一步步到 “问题定位、规范实现”，技术能力和问题排查能力都有了质的提升。
+
+
+
+当前服务存在两套jwt
+spring security
+springmvc 自定义
+请求进入
+  → Security 过滤器链（JwtAuthenticationFilter）
+  → DispatcherServlet
+  → Spring MVC 拦截器（JwtInterceptor）
+  → Controller
+
+1.梯子问题 2.pom没补全 3.在设计表时需要想到 业务怎么细则 细则内 每个字段怎么设计
+本次就是因为原先security没调通 然后直接选用自己造salt 但是后续又调通security完全忘记salt
+以至于数据库表里的salt与mapper里的sql与实际逻辑处理冲突 导致程序报错 现在调通了 我能得到哪些反思？
+
+思路不清晰 进入的请求只需要经过后端encoder存入hash密码即可 不能明文传入密码到数据库里
+登录也只需要请求的密码和数据库里hash密码匹配 成功则登录
+
+
+你用的 JJWT 0.11.5 版本对密钥安全要求极高：
+你选择了 HS256 签名算法，但配置的 JWT 密钥长度太短（不足 32 个字符）
+密钥不合法 → JJWT 错误地自动切换成了 ECDSA 椭圆曲线算法
+而 ECDSA 算法必须用专用私钥，你给的是普通字符串 → 直接抛异常
+你的登录流程完全正常：数据库查询✅、密码加密✅、校验通过✅仅仅卡在最后一步：生成 Token 时报错！
+修改 application.yml 密钥（必须 ≥32 个字符）
+把原来的短密钥，替换成32 位以上的随机字符串（HS256 强制要求）
+
+你的 application.yml 里的 secret 是普通明文字符串，
+根本不是 Base64 编码内容强行 Base64 解码后，
+字节数组完全错乱 → JJWT 库识别不出这是HS256对称密钥 → 库内部
+bug自动跑偏成了 ECDSA 非对称加密算法而 ECDSA 算法必须用专用私钥对象，你只有普通字符串字节，
+直接抛出这个异常。
+

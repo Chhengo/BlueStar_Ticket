@@ -18,6 +18,7 @@ public class UserController {
     public UserService userService;
     @PostMapping("/register")
     public Result<UserRegisterResponse> register(@RequestBody UserRegisterRequest req){
+        log.info("=== register接口被调用 ==="); // 加这行
         return Result.success(userService.register(req));
     }
 
