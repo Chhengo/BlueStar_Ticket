@@ -126,11 +126,11 @@ CREATE TABLE t_idempotent_record (
 ### 5.1 用户模块
 
 ```
-POST /api/v1/user/register
+POST /api/user/register
   Body: {username, password, phone, realName}
   Return: {userId, username}
 
-POST /api/v1/user/login
+POST /api/user/login
   Body: {username, password}
   Return: {token, expireAt}
 ```

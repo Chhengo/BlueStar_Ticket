@@ -1,0 +1,67 @@
+Day 1 · 4月20日 P1 + P2 + P3
+Day 2 · 4月21日 P4 + P5
+Day 3 · 4月22日 P6 + P7 + P8
+Day 1 · 4月20日（今天）
+环境 · 用户 · 活动数据
+P1 todo
+环境搭建 + 建表 fine
+Spring Boot 项目骨架、MySQL 建 5 张表 fine
+application.yml 配置 MySQL/Redis/Kafka todo
+P2 fine
+用户注册 / 登录 + JWT
+BCrypt 存储、JWT 生成与拦截器校验、Postman 跑通拿 token
+P3 todo
+活动 / 票档 CRUD
+t_event + t_ticket_type 增删改查接口、Redis 库存 Key 初始化写入
+今天创建的 Issues 已复制 ✓
+[P1] 项目脚手架与数据库建表 fine
+[P1] Redis / Kafka 本地环境验证
+[P2] 用户注册接口 + BCrypt fine
+[P2] 用户登录接口 + JWT 生成 fine
+[P2] JWT 拦截器鉴权 fine
+[P3] 活动增删改查接口
+[P3] 票档增删改查 + 库存 Redis 初始化
+
+Day 2 · 4月21日
+Redis 扣库存 · Kafka 异步落单
+P4 Redis 原子扣库存 Lua 脚本
+令牌桶限流 Lua + 扣库存 Lua、用户限购校验、单测 10 并发不超卖
+P4 抢票核心接口 /orders/grab
+同步阶段：JWT→限流→重复购买→扣库存→发 MQ，全程 <50ms
+P5
+Kafka 消费者异步落单
+幂等校验、写 t_order、写 t_idempotent_record、设 TTL 900s
+P5
+全链路联调
+抢票 → MQ → 订单写库，Postman 验证 orderNo 返回与数据库一致
+明天创建的 Issues 已复制 ✓
+
+[P4] 令牌桶限流 Lua 脚本实现
+[P4] 扣库存 Lua 脚本 + 并发单测
+[P4] 抢票接口 /orders/grab 实现
+[P5] Kafka topic 配置与生产者
+[P5] 消费者幂等处理 + 落单逻辑
+[P5] 抢票全链路联调验证
+
+Day 3 · 4月22日
+支付超时 · 前端 · 部署
+P6
+模拟支付确认接口
+POST /orders/{orderNo}/pay，状态→PAID；GET /orders/{orderNo} 查详情
+P6
+超时取消 + 回补库存
+Redis keyspace notification 或定时扫描，15 分钟未支付 → 取消 + INCRBY 回补
+P7
+Vue3 购票页（最小可用）
+活动列表 + 票档展示 + 抢票按钮 + 支付倒计时；调后端接口
+P8
+Docker Compose 一键启动
+MySQL / Redis / Kafka / 后端 / 前端 五个容器，README 写启动命令
+后天创建的 Issues 已复制 ✓
+
+[P6] 模拟支付确认接口
+[P6] 订单超时取消 + 库存回补
+[P7] Vue3 购票页基础页面
+[P7] 支付倒计时组件
+[P8] Docker Compose 多容器配置
+[P8] README 启动文档
