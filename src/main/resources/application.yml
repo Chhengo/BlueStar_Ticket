@@ -6,7 +6,11 @@ spring:
     url: jdbc:mysql://localhost:3306/ticket?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
-
+jwt:
+  # 密钥：请使用一个至少 32 字符的复杂随机串（生产环境建议从环境变量读取）
+  secret: your-256-bit-secret-key-at-least-32-chars
+  # 过期时间：24小时 (单位毫秒)
+  expiration: 86400000
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.ticket.entity

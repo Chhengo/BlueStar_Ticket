@@ -3,11 +3,11 @@ package com.ticket.user.vo;
 public class UserLoginResponse {
     private String token;
     private String username;
-    private Long time;
+    private Long expiretime;
 
-    public UserLoginResponse(String token,Long time) {
+    public UserLoginResponse(String token,Long expiretime) {
         this.token = token;
-        this.time = time;
+        this.expiretime = expiretime;
     }
 
     public String getToken() {
@@ -26,11 +26,11 @@ public class UserLoginResponse {
         this.username = username;
     }
 
-    public Long getTime() {
-        return time;
+    public Long getexpiretime() {
+        return expiretime;
     }
 
-    public void setTime(Long time) {
-        this.time = time;
+    public void setexpiretime(Long expiretime) {
+        this.expiretime = expiretime;
     }
 }

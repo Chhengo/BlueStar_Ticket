@@ -6,7 +6,8 @@ public class UserEntity {
     private int phone;
     private String realName;
     private int id;
-
+    private String passwordHash;
+    private String passwordSalt;
     public String getUsername() {
         return username;
     }
@@ -45,5 +46,13 @@ public class UserEntity {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 }
