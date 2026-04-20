@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Mapper
 public interface UserMapper {
 
-    boolean findByName(boolean b);
-
     void insert(UserEntity user);
 
     UserEntity findByUsername(String username);
+
+    Boolean existsByUsername(String username);
 }
