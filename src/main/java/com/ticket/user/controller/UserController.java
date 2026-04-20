@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/vi/user")
+@RequestMapping("/api/user")
 @Slf4j
 public class UserController {
     @Autowired
@@ -21,12 +21,12 @@ public class UserController {
         return Result.success(userService.register(req));
     }
 
-    @PostMapping("login")
-    public Result<UserLoginResponse> login(UserLoginRequest req){
+    @PostMapping("/login")
+    public Result<UserLoginResponse> login(@RequestBody UserLoginRequest req){
         return Result.success(userService.login(req));
     }
 
-    @GetMapping("hello")
+    @GetMapping("/hello")
     public String hello(String num){
         return "hello";
     }

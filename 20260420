@@ -1,0 +1,65 @@
+从你的启动日志能看到Spring Security 的完整过滤器链已经加载
+（DefaultLoginPageGeneratingFilter、BasicAuthenticationFilter等），这就是问题的根源：
+你引入了spring-boot-starter-security依赖，但没有做适配配置。Spring Security 的默认规则是拦截所有请求
+，强制要求身份认证，且它的过滤器优先级远高于你自己写的JwtInterceptor。
+你的请求还没到自定义拦截器、Controller，就被 Spring Security 的过滤器链拦住了，甚至陷入了重定向死循环，
+所以 Postman 一直卡在Sending request...，收不到任何响应。
+
+要么直接撤销官方拦截 要么可以把他加到拦截链中
+
+把 JWT 校验做成 Security 的过滤器
+
+
+一、三步走行动总结
+第一步：需求明确与初期踩坑
+你的目标：搭建一套 JWT 验证系统，用 AOP 切面统一处理 Token 解析，避免 Controller 重复代码，同时防护系统攻击。遇到的核心问题：
+知识盲区：不清楚 JWT 的概念和具体写法。
+请求被拦截：调用注册接口时，Spring Security 默认拦截所有请求，Postman 一直卡在 “Sending request...” 无响应。
+配置失效：写了自定义拦截器JwtInterceptor和WebMvcConfig，但放行规则完全不生效。
+你的尝试：
+编写自定义拦截器，试图在拦截器中解析 Token 并放入上下文。
+给WebMvcConfig加了@Component注解（错误用法）。
+第二步：核心问题突破与基础修复
+关键解决动作：
+定位 Security 拦截根因：发现 Spring Security 过滤器链优先级远高于自定义拦截器，请求还没到拦截器就被 Security 拦住。
+修复配置类注解：将WebMvcConfig的@Component改为@Configuration，确保拦截器放行规则被 Spring 识别。
+补全 JWT 工具类：引入 JJWT 依赖，编写包含generate（生成 Token）和parseToken（解析 Token）的JwtUtil，理解了 JWT 的 Header.Payload.Signature 结构。
+修复基础代码漏洞：
+UserEntity的phone字段从int改为String，避免手机号溢出。
+Controller 注册方法参数加上@RequestBody，解决 JSON 参数映射失败问题。
+修正 Postman 的 JSON 语法，补全必填参数。
+第三步：规范优化与体系升级
+遇到的新问题：Spring Security 配置代码全是弃用警告，旧写法在 Security 6.x 中已被移除。你的优化动作：
+适配 Spring Security 6.x：将配置改为官方推荐的 Lambda DSL 写法，彻底消除弃用警告。
+认证体系规范化：从 “自定义拦截器 + 手动验证”，升级为将JwtAuthenticationFilter集成到 Spring Security 官方过滤器链中，统一认证流程。
+明确放行规则：在 Security 配置中精准放行/api/user/register和/api/user/login，其余接口需认证。
+二、你的进步
+技术认知深度提升：
+从 “不知道 JWT 是什么”，到理解 JWT 无状态认证的核心优势，掌握了 Token 的结构和安全要点（如 Payload 不能存密码、密钥要足够长）。
+搞懂了 Spring 框架的配置类规范（@Configuration vs @Component）、AOP 思想在拦截器 / 过滤器中的应用。
+问题排查能力成型：
+从 “Postman 无响应就慌了”，到能通过看启动日志、加分层日志、检查注解和路径，一步步定位到具体原因。
+掌握了 “从外到内” 的排查思路：先看服务启动状态，再看请求是否被拦截，最后看业务代码执行。
+代码规范意识建立：
+从随意写代码（如phone用int、Controller 参数不加注解），到会主动考虑字段类型合理性、框架注解的正确用法。
+理解了 “不要重复造轮子”，优先用 Spring Security 官方过滤器链，而不是自己手写全套验证逻辑。
+三、你的纰漏与优化建议
+1. 概念与流程设计的纰漏
+混淆了拦截器与过滤器的优先级：一开始没意识到 Spring Security 过滤器链优先级远高于自定义HandlerInterceptor，导致做了很多无用功。
+建议：记住 Spring Web 请求的执行顺序：Tomcat容器 -> Servlet过滤器链（含Security） -> Spring MVC拦截器 -> Controller。
+认证流程设计不规范：你提到 “手动做一次 token 验证后再进入 security 安全验证”，这是冗余且不安全的。
+建议：直接把 JWT 验证集成到 Security 过滤器链中，由 Security 统一管理认证上下文，不要 “手动验证 + Security 验证” 两层。
+2. 代码与配置的低级错误
+配置类注解用错：WebMvcConfig一开始用@Component，而 Spring MVC 的WebMvcConfigurer必须用@Configuration才能被识别为配置类。
+基础字段类型设计失误：phone用int类型，忽略了 Java 中int最大值只有 21 亿（10 位），国内手机号 11 位必然溢出。
+Controller 参数遗漏关键注解：注册方法参数没加@RequestBody，导致 Spring 无法把 Postman 的 JSON 映射到对象，请求直接卡住。
+3. 技术选型与写法的滞后
+Security 配置写法未与时俱进：一开始直接用 Spring Security 5.x 的链式写法，没注意到 Spring Boot 3.x 配套的 Security 6.x 已经彻底废弃该写法。
+建议：引入新依赖时，先看官方文档对应版本的写法，避免用已弃用的 API。
+四、最终结果
+你成功解决了所有核心问题：
+✅ 注册 / 登录接口正常放行，Postman 能收到响应。
+✅ JWT 工具类能正常生成和解析 Token。
+✅ 搭建了一套符合 Spring Security 6.x 规范的 JWT 认证体系。
+✅ 消除了所有弃用警告和基础代码漏洞。
+整个过程虽然踩了很多坑，但你从 “需求模糊、技术盲区”，一步步到 “问题定位、规范实现”，技术能力和问题排查能力都有了质的提升。

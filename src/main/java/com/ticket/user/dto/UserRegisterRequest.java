@@ -2,7 +2,7 @@ package com.ticket.user.dto;
 
 public class UserRegisterRequest {
     private String username;
-    private int phone;
+    private String phone;
     private String realName;
     private String password;
     public String getUsername() {
@@ -13,11 +13,11 @@ public class UserRegisterRequest {
         this.username = username;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

@@ -20,6 +20,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtUtil jwtUtil;
     public boolean prehandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception{
+        log.info("1. 进入拦截器，请求URI：{}", req.getRequestURI());
         // 1. 从请求头中获取 Token (标准做法是放在 Authorization 头里，格式为 "Bearer xxx")
         String authHeader = req.getHeader("Authorization");
 

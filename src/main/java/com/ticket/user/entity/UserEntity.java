@@ -1,13 +1,35 @@
 package com.ticket.user.entity;
 
+import lombok.Data;
+
+import java.util.Date;
+
 public class UserEntity {
     private int status;
     private String username;
-    private int phone;
+    private String phone;
     private String realName;
     private int id;
     private String passwordHash;
-    private String passwordSalt;
+    private Date createdAt;
+    private Date updatedAt;
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getupdatedAt() {
+        return updatedAt;
+    }
+
+    public void setupdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -16,11 +38,11 @@ public class UserEntity {
         this.username = username;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
