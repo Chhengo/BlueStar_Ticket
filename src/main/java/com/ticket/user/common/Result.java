@@ -10,8 +10,17 @@ public class Result<T> {
     private Integer code;
     private String msg;
     private T data;
+
+    public Result(Integer code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
+
     public static <T> Result<T> success(T data){
         return of(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(), data);
+    }
+    public static <T> Result<T> success(){
+        return new Result(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg());
     }
     public static <T> Result<T> fail(ResultCode rc){
         return of(rc.getCode(), rc.getMsg(), null);

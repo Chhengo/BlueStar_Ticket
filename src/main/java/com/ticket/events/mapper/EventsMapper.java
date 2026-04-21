@@ -12,4 +12,10 @@ public interface EventsMapper extends BaseMapper<Events> {
 
     // getLists 用 MyBatis-Plus 内置分页，不需要 XML
     IPage<Events> getLists(Page<Events> page, @Param("status") int status);
+
+    void insertEvent(Events events);
+
+    void updateEvent(Events events);
+
+    void deleteEvent(Long id);
 }

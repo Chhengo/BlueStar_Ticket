@@ -11,4 +11,10 @@ public interface EventsService {
     IPage<Events> getLists(int page, int size);
 
     List<TicketType> getDetails(Long eventId);
+
+    void createEvent(Events events);
+
+    void updateEvent(Events events);
+
+    void deleteEvent(Long id);
 }

@@ -35,4 +35,19 @@ public class EventsServiceImpl implements EventsService {
         //分a b c档位 100 80 60 stock统一为100
         return ticketsMapper.getDetails(eventId);
     }
+
+    @Override
+    public void createEvent(Events events) {
+        eventsMapper.insertEvent(events);
+    }
+
+    @Override
+    public void updateEvent(Events events) {
+        eventsMapper.updateEvent(events);
+    }
+
+    @Override
+    public void deleteEvent(Long id) {
+        eventsMapper.deleteEvent(id);
+    }
 }

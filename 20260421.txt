@@ -56,3 +56,11 @@ vi 和 v1 ——一个是字母 i，一个是数字 1。
 http://localhost:8080/api/v1/events/1/ticket-types
 {eventId} 直接替换成具体的数字放在路径里，不加 ?。
 ?key=value 是 @RequestParam 用的，@PathVariable 是直接嵌在路径里的。这个区别记住。
+
+在我给思路之前，先告诉我：
+增删改你自己觉得应该怎么写？（哪怕是伪代码）
+单独插入 删除 修改 入参是List<Events> 不用返回参数 修改需要返回 增用post 改用put 删除直接delete 有请求体 @RequestBody
+返回成功码值 具体方法在impl实现 增 批量插入 传入mapper 改分单改批改 其实我觉得也不用但是我说不出来 删除直接delete
+卡在实现impl
+你卡在哪一步？
+你已经尝试了什么？ controller卡在单操作还是批量操作徘徊

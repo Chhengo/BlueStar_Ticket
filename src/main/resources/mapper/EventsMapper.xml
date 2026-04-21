@@ -2,6 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ticket.events.mapper.EventsMapper">
+    <!-- 新增活动：严格匹配表结构，移除无效字段，补全必填字段 -->
+    <insert id="insertEvent" parameterType="com.ticket.events.entity.Events">
+        INSERT INTO t_event (
+            name,
+            venue,
+            start_time,
+            sale_start,
+            sale_end,
+            status
+        )
+        VALUES (
+                   #{name},
+                   #{venue},
+                   #{startTime},
+                   #{saleStart},
+                   #{saleEnd},
+                   #{status}
+               )
+    </insert>
+
+    <!-- 更新活动：动态字段，匹配表结构 -->
+    <update id="updateEvent" parameterType="com.ticket.events.entity.Events">
+        UPDATE t_event
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="venue != null">venue = #{venue},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="saleStart != null">sale_start = #{saleStart},</if>
+            <if test="saleEnd != null">sale_end = #{saleEnd},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <update id="update">
+
+    </update>
+
+    <delete id="deleteEvent" parameterType="Long">
+        DELETE FROM ticket.t_event WHERE id = #{id}
+    </delete>
+
+    <select id="getById" parameterType="Long" resultType="com.ticket.events.entity.Events">
+        SELECT * FROM ticket.t_event WHERE id = #{id}
+    </select>
     <select id="getLists" resultType="com.ticket.events.entity.Events">
         select * from ticket.t_event
         where status = 1

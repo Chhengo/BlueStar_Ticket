@@ -1,5 +1,7 @@
 package com.ticket.events.entity;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,5 +14,6 @@ public class Events {
     private Date saleStart;
     private Date saleEnd;
     private int status;
+
 
 }
