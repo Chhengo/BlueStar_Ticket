@@ -50,6 +50,7 @@ jwt:
 mybatis:
   configuration:
       log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 控制台打印SQL执行日志
+      map-underscore-to-camel-case: true
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.ticket.entity
 

@@ -34,7 +34,11 @@ public class SecurityConfig {
                 // 3. 接口权限放行规则（核心）
                 .authorizeHttpRequests(auth -> auth
                         // 放行注册、登录接口，无需任何认证即可访问
-                        .requestMatchers("/api/user/register", "/api/user/login","/api/user/hello").permitAll()
+                        .requestMatchers(
+                                "/api/user/register",
+                                "/api/user/login",
+                                "/api/**",
+                                "/api/user/hello").permitAll()
                         // 其余所有接口，必须经过认证才能访问
                         .anyRequest().authenticated()
                 )

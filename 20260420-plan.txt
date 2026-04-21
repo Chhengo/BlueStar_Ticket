@@ -3,10 +3,10 @@ Day 2 · 4月21日 P4 + P5
 Day 3 · 4月22日 P6 + P7 + P8
 Day 1 · 4月20日（今天）
 环境 · 用户 · 活动数据
-P1 todo
+P1 fine
 环境搭建 + 建表 fine
 Spring Boot 项目骨架、MySQL 建 5 张表 fine
-application.yml 配置 MySQL/Redis/Kafka todo
+application.yml 配置 MySQL/Redis/Kafka fine
 P2 fine
 用户注册 / 登录 + JWT
 BCrypt 存储、JWT 生成与拦截器校验、Postman 跑通拿 token
@@ -19,8 +19,8 @@ t_event + t_ticket_type 增删改查接口、Redis 库存 Key 初始化写入
 [P2] 用户注册接口 + BCrypt fine
 [P2] 用户登录接口 + JWT 生成 fine
 [P2] JWT 拦截器鉴权 fine
-[P3] 活动增删改查接口
-[P3] 票档增删改查 + 库存 Redis 初始化
+[P3] 活动增删改查接口 todo
+[P3] 票档增删改查 + 库存 Redis 初始化 todo
 
 Day 2 · 4月21日
 Redis 扣库存 · Kafka 异步落单

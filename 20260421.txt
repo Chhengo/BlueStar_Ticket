@@ -1,0 +1,58 @@
+每天总结的习惯你已经有了，这很好。
+但总结的粒度要调整：不只是记"今天学了 xxx 概念"，而是记"今天我遇到 xxx 问题，
+我第一反应是 yyy，实际正确做法是 zzz，差距在于我不知道 qqq"。
+这种记录三个月之后回头看，你会清楚地看到自己的思维模式在哪里有盲区。
+
+你觉得"用户登录后拿到他的信息"，这个信息应该存在哪里？每次请求都带着走，还是存在服务器某个地方？你现在的直觉是什么？
+你的 Controller 里写了 @RequestBody UserLoginRequest req，你自己觉得这个设计有没有问题？查活动列表为什么要传登录请求体？
+SQL 不会没关系，但先告诉我：你觉得一个演唱会活动，数据库里大概需要哪些字段？随便写，不需要准确。
+
+1.存在数据库里 不能是每次请求带着走
+现代做法就是每次带着走，但带的不是用户名密码，而是一个 Token（JWT）。服务器不存登录状态，Token 本身加密包含了用户身份。
+登录 → 服务器签发 JWT Token → 前端存 Token
+↓
+每次请求 → Header 带 Token → 后端拦截器解析 → 取出 userId
+↓
+Controller 不需要传 UserLoginRequest，直接从上下文取 userId
+我需要一个存用户上下文的实体类
+2.很有问题 如果一直要loginrequest 但是用户又没有先登录 就一直想看活动分页页面 请求被卡死拦截 查活动列表应该直接去数据库查询活动分页内容
+3 这个活动起码要有库存 票价 活动名 用户名 以及后续我的活动id 我的核心逻辑是redis预扣减数据库再原子性落库 这是我的全部思考
+
+@Data 是 Lombok 注解，自动生成 getter/setter/toString/equals。不用它就要手写几十行 getter setter，
+开发中当然用。你之前说"不需要"可能是听别人说的，先把这个结论放下。
+
+@TableName 是 MyBatis-Plus 的注解，告诉框架这个类对应哪张表。你说的"对应列名称"是 @TableField，不是 @TableName。这两个要分清。
+
+SQL 有但你实体缺了哪几个字段？
+你实体有但 SQL 没有的是哪几个？
+stock 和 price 应该在这张表里吗？想想演唱会 A/B/C 三档票价不同，放在 events 表合理吗？
+
+stock 和 price 不是在 order 层面——order 是用户已经下单的记录，下单之前你怎么知道票价是多少、还有没有库存？
+想想这个场景：演唱会有 A/B/C 三档，每档价格不同、库存不同。这个信息应该放在哪张表？
+提示：你现在有 t_event 表，但一个 event 对应多个票档，这是什么关系？需要几张表？
+
+
+"有关联，可以用索引连接"——你说的是外键关联，一个 event 对应多个 ticket_type，这是一对多关系。
+表结构就两张：
+t_event (活动表)          t_ticket_type (票档表)
+id                    →   event_id (外键)
+name                      type_name (A/B/C)
+venue                     price
+start_time                stock
+...                       ...
+不是三个库存表，是一张票档表，用 event_id 关联，A/B/C 是三行数据。
+
+SQL 里 price 是 DECIMAL(10,2)，你实体用了 Long，精度会丢失，应该用 BigDecimal
+SQL 有 total_stock，你实体没有
+
+http://localhost:8080/api/v1/events?page=1&size=10
+你自己看：
+放行写的是 /api/vi/events
+你的 Controller 写的是 /api/v1/events
+vi 和 v1 ——一个是字母 i，一个是数字 1。
+改一致就好了。
+
+
+http://localhost:8080/api/v1/events/1/ticket-types
+{eventId} 直接替换成具体的数字放在路径里，不加 ?。
+?key=value 是 @RequestParam 用的，@PathVariable 是直接嵌在路径里的。这个区别记住。

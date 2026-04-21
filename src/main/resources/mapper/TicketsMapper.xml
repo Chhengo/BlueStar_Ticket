@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ticket.events.mapper.TicketsMapper">
+    <select id="getDetails" resultType="com.ticket.events.entity.TicketType">
+        select id, event_id, name, price, total_stock, remain_stock, per_limit
+        from ticket.t_ticket_type where event_id = #{eventId};
+    </select>
+
+</mapper>
