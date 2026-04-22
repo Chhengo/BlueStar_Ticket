@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ticket.orders.mapper.OrderMapper">
+    <insert id="insertOrder">
+        insert into ticket.t_order
+        (id, order_no, user_id, ticket_type_id,
+         quantity, total_amount, status, expire_at,
+         created_at, updated_at, event_id)
+        values (#{userId},#{userName},#{ticketId},#{eventId},#{status},#{createTime},#{orderNo});
+    </insert>
+</mapper>

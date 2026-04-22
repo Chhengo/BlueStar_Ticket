@@ -1,4 +1,4 @@
-package com.ticket.orders;
+package com.ticket.orders.controller;
 
 import com.ticket.orders.entity.GrabRequest;
 import com.ticket.orders.service.OrderService;

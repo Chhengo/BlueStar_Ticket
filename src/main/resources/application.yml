@@ -18,7 +18,7 @@ spring:
       producer:
         key-serializer: org.apache.kafka.common.serialization.StringSerializer
         value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-        acks: 1
+        acks: all
         retries: 3
       consumer:
         group-id: BlueStar_Ticket-group

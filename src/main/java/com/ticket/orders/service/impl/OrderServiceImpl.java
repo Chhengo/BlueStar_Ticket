@@ -47,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
         message.setUserId(request.getUserId());
         message.setOrderNo(generateOrderNo());//生成唯一订单号
 
+        kafkaProducerService.sendOrderMessage(message);
         return Result.success("抢票成功，订单处理中");
     }
 
