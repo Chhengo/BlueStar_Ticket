@@ -64,3 +64,36 @@ http://localhost:8080/api/v1/events/1/ticket-types
 卡在实现impl
 你卡在哪一步？
 你已经尝试了什么？ controller卡在单操作还是批量操作徘徊
+
+
+
+库存初始化，你觉得什么时候触发？启动时？创建票档时？还是手动调接口？Redis 存库存，你觉得 key 长什么样？value 存什么类型？
+初始化应该启动时预缓存 以免被大量qps冲垮 创建票档时需要自己制定开售时间 来模拟qps冲击 手动调接口太不现实
+redis存库存的key ticket:stock:#{ticket_type} value 应该存stock总数量18:52Claude responded: 完全正确，思路很清晰。完全正确，思路很清晰。
+
+差距只有一个细节：key 设计
+你的 ticket:stock:#{ticket_type} 方向对，但票档应该挂在活动下面：
+ticket:stock:{eventId}:{ticketId}
+原因：同一个活动有多个票档，eventId 方便后续按活动维度批量操作。
+
+令牌桶限流 Lua 脚本，你自己的思路是什么？（哪怕是错的）
+你卡在哪一步？
+你已经尝试了什么？
+
+令牌桶限流 我认为需要先执行放令牌 和取令牌 lua里应该先放令牌
+执行完业务操作后再取令牌 我一点都不会lua脚本
+直接给我完整的lua脚本以及对应redisconfig实现
+
+正确顺序是：
+放令牌（补充） → 取令牌（判断够不够） → 够：放行业务 / 不够：拒绝
+令牌桶需要在 Redis 里存什么？
+key含义rate_limit:{key}:tokens当前桶里有多少令牌
+rate_limit:{key}:last_time上次放令牌的时间戳（毫秒）
+
+Lua 脚本核心逻辑（先读懂再看代码）
+1. 读取当前 tokens 和 last_time
+2. 计算距上次过了多少毫秒 → 应该补充多少令牌 1s 20个请求 1ms 0.002个请求 从整秒补充到毫秒级补充
+3. tokens = min(桶容量, 旧tokens + 新补充) 不能超过桶容量
+4. 如果 tokens >= 1 → 扣一个令牌，返回1（允许）
+5. 否则返回0（拒绝）
+

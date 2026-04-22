@@ -19,8 +19,8 @@ public class Result<T> {
     public static <T> Result<T> success(T data){
         return of(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(), data);
     }
-    public static <T> Result<T> success(){
-        return new Result(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg());
+    public static <T> Result<T> success(ResultCode rc){
+        return of(rc.SUCCESS.getCode(), rc.SUCCESS.getMsg(), null);
     }
     public static <T> Result<T> fail(ResultCode rc){
         return of(rc.getCode(), rc.getMsg(), null);

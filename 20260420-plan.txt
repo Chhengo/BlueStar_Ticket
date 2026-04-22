@@ -10,7 +10,7 @@ application.yml 配置 MySQL/Redis/Kafka fine
 P2 fine
 用户注册 / 登录 + JWT
 BCrypt 存储、JWT 生成与拦截器校验、Postman 跑通拿 token
-P3 todo
+P3
 活动 / 票档 CRUD
 t_event + t_ticket_type 增删改查接口、Redis 库存 Key 初始化写入
 今天创建的 Issues 已复制 ✓
@@ -19,8 +19,8 @@ t_event + t_ticket_type 增删改查接口、Redis 库存 Key 初始化写入
 [P2] 用户注册接口 + BCrypt fine
 [P2] 用户登录接口 + JWT 生成 fine
 [P2] JWT 拦截器鉴权 fine
-[P3] 活动增删改查接口 todo
-[P3] 票档增删改查 + 库存 Redis 初始化 todo
+[P3] 活动增删改查接口 fine
+[P3] 票档增删改查 + 库存 Redis 初始化 fine
 
 Day 2 · 4月21日
 Redis 扣库存 · Kafka 异步落单

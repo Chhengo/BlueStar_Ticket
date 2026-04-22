@@ -7,5 +7,9 @@
         select id, event_id, name, price, total_stock, remain_stock, per_limit
         from ticket.t_ticket_type where event_id = #{eventId};
     </select>
+    <select id="getAllData" resultType="com.ticket.events.entity.TicketType">
+        select id, event_id, name
+        from ticket.t_ticket_type
+    </select>
 
 </mapper>
