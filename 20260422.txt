@@ -148,3 +148,79 @@ acks
 1 leader收到就确认 leader宕机可能丢
 all 所有副本都收到才确认 最安全，抢票场景用这个
 
+
+今日任务完成情况
+[P4] 令牌桶限流 Lua 脚本实现         ✅ fine
+[P4] 扣库存 Lua 脚本 + 并发单测      ⚠️  fine（脚本完成，并发单测未做）
+[P4] 抢票接口 /orders/grab 实现      ✅ fine
+[P5] Kafka topic 配置与生产者        ✅ fine
+[P5] 消费者幂等处理 + 落单逻辑        ✅ fine
+[P5] 抢票全链路联调验证              ❌ todo
+
+新对话上下文
+项目：抢票系统（Spring Boot + Redis + Kafka + MySQL）
+
+已完成模块：
+- Events CRUD、票档 CRUD
+- Redis 库存预缓存（CommandLineRunner）
+  key: ticket:stock:{eventId}:{ticketId}  value: totalStock
+- 令牌桶限流 Lua（resources/lua/rate_limit.lua）
+  RateLimiterService.isAllowed(key, rate, capacity)
+- 扣库存 Lua（resources/lua/stock_deduct.lua）
+  StockService.deductStock(eventId, ticketId)
+- 抢票接口 POST /orders/grab
+  流程：限流 → 扣库存 → 组装OrderMessage → 发Kafka
+- Kafka 生产者/消费者
+  topic: order-grab，3分区
+  消费者双重幂等：orderNo去重 + userId+eventId去重
+- OrderMessage 字段：userId/userName/eventId/ticketId/orderNo
+- orderNo 在生产者生成（时间戳+随机数），保证消费者幂等
+
+下一步（按优先级）：
+1. 全链路联调验证（P5，最优先）
+2. 模拟支付确认接口（P6）
+3. 订单超时取消 + 库存回补（P6）
+4. Vue3 购票页基础页面（P7）
+5. 支付倒计时组件（P7）
+6. Docker Compose 多容器配置（P8）
+7. README 启动文档（P8）
+
+技术栈：
+MybatisPlus / RedisTemplate<String,Object> / StringRedisSerializer
+KafkaTemplate / @KafkaListener / DefaultRedisScript<Long>
+
+待补：并发单测（扣库存）
+完整优先级排列
+[P5] 抢票全链路联调验证              ← 明天第一件事，其他都建立在这上面
+[P6] 模拟支付确认接口               ← 联调完马上做，业务闭环必须
+[P6] 订单超时取消 + 库存回补         ← 和支付一起做，防止库存被锁死
+[P7] Vue3 购票页基础页面            ← 后端稳了再动前端
+[P7] 支付倒计时组件                 ← 配合超时取消联动
+[P8] Docker Compose 多容器配置     ← 功能全部完成后再做
+[P8] README 启动文档               ← 最后收尾
+
+
+今天的学习记录填一下，明天开口更快：
+今天遇到的问题：___ redis限流与扣库存逻辑不清晰 kafka基础知识不明确 实操能力弱
+我的第一反应是：___ 令牌桶限流与lua扣库存 具体代码实现不顺利 很难 令牌桶就是要求key 可以放令牌以及最大令牌
+扣库存只想到lua脚本 但是忘了 先校验是否还有库存 然后再-1
+实际正确做法是：___
+下次遇到类似问题，我会先想到：___ 先自己思考实现思路 再具体编码和code
+
+今天的学习记录：
+今天遇到的问题：
+  Redis限流与扣库存逻辑不清晰，Kafka基础知识不明确，实操能力弱
+我的第一反应是：
+  令牌桶需要 key + 放令牌速率 + 桶容量
+  扣库存只想到 Lua 脚本，但漏掉了"先判断库存>0，再DECR"这一步
+  Kafka只停在 topic/分区/offset 的理论层面，不知道生产者需要配什么
+实际正确做法是：
+  令牌桶 Lua：读tokens和last_time → 按时间差补令牌 → 判断够不够 → 够则扣1返回1，不够返回0
+  扣库存 Lua：GET库存 → <= 0返回0 → DECR返回1（原子操作防超卖）
+  Kafka生产者三要素：bootstrap-servers（去哪发）+ 序列化器（发什么格式）+ acks=all（可靠性）
+  orderNo必须在生产者生成：消费者重试时携带同一个号，消费者用它做幂等去重，防止重复落库
+下次遇到类似问题，我会先想到：
+  Lua脚本 = 把多步Redis操作变成原子操作，凡是需要"先读再写"的场景都要用Lua
+  幂等 = 同一件事执行多次结果一样，关键是找到唯一标识（orderNo）
+  先自己写思路再编码，哪怕是伪代码，差距本身就是学习
+
