@@ -23,6 +23,7 @@ public class StockInitializer implements CommandLineRunner {
         List<TicketType> allData = ticketsMapper.getAllData();
         for(TicketType t : allData){
             String redisKey = "ticket:stock:"+ t.getEventId() + ":"+ t.getId();
+            //活动与票id
             redisTemplate.opsForValue().set(redisKey,t.getTotalStock());
         }
     }

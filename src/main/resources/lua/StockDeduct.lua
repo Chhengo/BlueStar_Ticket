@@ -7,6 +7,7 @@ if stock == nil or stock <= 0 then
     return 0
 end
 -- redis唤起自减函数给库存-1
-redis.call(DECR,KEYS[1])
+-- 原来没加双引号。。。。
+redis.call("DECR",KEYS[1])
 --stock = DECR(stock)
 return 1

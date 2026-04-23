@@ -35,7 +35,7 @@ public class KafkaConsumerService {
         order.setUserId(message.getUserId());
         order.setUserName(message.getUserName());
         order.setTicketId(message.getTicketId());
-        order.setStatus("PAID");
+        order.setStatus(1);
         order.setCreateTime(LocalDateTime.now());
 
         orderMapper.insertOrder(order);

@@ -12,7 +12,7 @@ public class Order {
     private String orderNo;
     private Long eventId;
     private Long ticketId;
-    private String status;
+    private int status;
     private LocalDateTime createTime;
 
 }

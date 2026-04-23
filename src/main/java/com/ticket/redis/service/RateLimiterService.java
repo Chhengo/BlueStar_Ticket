@@ -2,6 +2,7 @@ package com.ticket.redis.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ public class RateLimiterService {
     @Autowired
     private DefaultRedisScript<Long> rateLimitScript;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
     /**
      * @param key      限流维度，比如 "grab:event:1" 或 "grab:user:123"
      * @param rate     每秒放令牌数
@@ -31,7 +34,7 @@ public class RateLimiterService {
 
         long now = System.currentTimeMillis();
 
-        Long result = redisTemplate.execute(
+        Long result = stringRedisTemplate.execute(
                 rateLimitScript,
                 keys,
                 String.valueOf(rate),

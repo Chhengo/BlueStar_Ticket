@@ -8,7 +8,7 @@
         from ticket.t_ticket_type where event_id = #{eventId};
     </select>
     <select id="getAllData" resultType="com.ticket.events.entity.TicketType">
-        select id, event_id, name
+        select id, event_id, total_stock
         from ticket.t_ticket_type
     </select>
 

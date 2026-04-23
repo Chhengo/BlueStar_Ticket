@@ -1,4 +1,25 @@
 spring:
+  kafka:
+    bootstrap-servers: 192.168.227.142:9092   # ← 换成你的虚拟机 IP
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+    consumer:
+      group-id: BlueStar_Ticket-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        spring.json.trusted.packages: "com.ticket.*"
+  # 自定义 Kafka topic 名
+  ticket:
+    kafka:
+      topic:
+        order-create: ticket.order.create
+
   data:
     redis:
       host: 192.168.227.142     # ← 换成你的虚拟机 IP
@@ -13,27 +34,8 @@ spring:
           max-idle: 10
           min-idle: 2
     # Kafka 配置
-    kafka:
-      bootstrap-servers: 192.168.227.142:9092   # ← 换成你的虚拟机 IP
-      producer:
-        key-serializer: org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-        acks: all
-        retries: 3
-      consumer:
-        group-id: BlueStar_Ticket-group
-        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-        value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-        auto-offset-reset: earliest
-        enable-auto-commit: false
-        properties:
-          spring.json.trusted.packages: "com.ticket.*"
 
-  # 自定义 Kafka topic 名
-  ticket:
-    kafka:
-      topic:
-        order-create: ticket.order.create
+
 
   application:
     name: BlueStar_Ticket

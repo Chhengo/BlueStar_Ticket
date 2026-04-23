@@ -69,7 +69,7 @@ CREATE TABLE t_event (
 CREATE TABLE t_ticket_type (
     id            BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '票档ID',
     event_id      BIGINT NOT NULL COMMENT '关联活动',
-    name          VARCHAR(64) NOT NULL COMMENT '票档名称（如VIP/普通）',
+    name          VARCHAR(64) NOT NULL COMMENT '票档（如A/B/C）',
     price         DECIMAL(10,2) NOT NULL COMMENT '单价（元）',
     total_stock   INT NOT NULL COMMENT '总库存',
     remain_stock  INT NOT NULL COMMENT '剩余库存（数据库兜底）',
@@ -82,8 +82,9 @@ CREATE TABLE t_ticket_type (
 ```sql
 CREATE TABLE t_order (
     id             BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
-    order_no       VARCHAR(32) NOT NULL UNIQUE COMMENT '订单号（雪花ID）',
+    order_no       VARCHAR(32) NOT NULL UNIQUE COMMENT '订单号（雪花ID） 已随机过',
     user_id        BIGINT NOT NULL COMMENT '用户ID',
+    event_id        BIGINT NOT NULL COMMENT '活动ID',
     ticket_type_id BIGINT NOT NULL COMMENT '票档ID',
     quantity       TINYINT NOT NULL COMMENT '购买数量',
     total_amount   DECIMAL(10,2) NOT NULL COMMENT '总金额',
