@@ -76,3 +76,6 @@ RedisTemplate<String, Object> 默认用的是 JdkSerializationRedisSerializer，
 传给 Lua 的参数会被序列化成乱码，Lua 里收到的不是你期望的字符串，tonumber(ARGV[3]) 就会返回 nil。
 用 StringRedisTemplate 或者执行脚本时指定序列化器
 
+
+落库下单后异步减少库存
+todo 用户在当前活动已经购票 数据库里能查到 redis扣减时就不该扣减了

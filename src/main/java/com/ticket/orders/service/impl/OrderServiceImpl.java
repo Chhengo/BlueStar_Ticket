@@ -48,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
         message.setOrderNo(generateOrderNo());//生成唯一订单号
 
         kafkaProducerService.sendOrderMessage(message);
+        //如果用户已经买过该活动的票 就直接拒绝再次买票 已经买过了
         return Result.success("抢票成功，订单处理中");
     }
 

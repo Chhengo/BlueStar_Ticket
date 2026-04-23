@@ -13,4 +13,7 @@ import java.util.List;
 public interface TicketsMapper extends BaseMapper<Events> {
      List<TicketType> getDetails(@Param("eventId") Long eventId);
      List<TicketType> getAllData();
+
+     //@Param("ticketId") Long ticketId
+    void decrStock(@Param("ticketId") Long ticketId);
 }

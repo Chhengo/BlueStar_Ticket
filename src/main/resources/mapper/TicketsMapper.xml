@@ -3,6 +3,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ticket.events.mapper.TicketsMapper">
+    <update id="decrStock">
+        update ticket.t_ticket_type
+        set remain_stock = t_ticket_type.remain_stock - 1
+        where id = #{ticketId}
+    </update>
     <select id="getDetails" resultType="com.ticket.events.entity.TicketType">
         select id, event_id, name, price, total_stock, remain_stock, per_limit
         from ticket.t_ticket_type where event_id = #{eventId};
