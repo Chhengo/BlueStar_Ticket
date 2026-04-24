@@ -11,4 +11,6 @@ public interface UserMapper {
     UserEntity findByUsername(String username);
 
     Boolean existsByUsername(String username);
+
+    String getuserNameById(Long userId);
 }
