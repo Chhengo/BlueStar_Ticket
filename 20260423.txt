@@ -78,4 +78,4 @@ RedisTemplate<String, Object> 默认用的是 JdkSerializationRedisSerializer，
 
 
 落库下单后异步减少库存
-todo 用户在当前活动已经购票 数据库里能查到 redis扣减时就不该扣减了
+todo 用户在当前活动已经购票 数据库里能查到 redis扣减时就不该扣减了 包括用户已经在该活动抢票 redis层直接拒绝请求 不扣减库存 这怎么做

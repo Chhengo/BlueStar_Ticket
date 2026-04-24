@@ -43,6 +43,7 @@ public class KafkaConsumerService {
         order.setUserName(message.getUserName());
         order.setTicketId(message.getTicketId());
         order.setStatus(1);
+        //0 支付取消 1 已支付 2 已重复购买 回档
         order.setCreatedTime(LocalDateTime.now());
 
         orderMapper.insertOrder(order);

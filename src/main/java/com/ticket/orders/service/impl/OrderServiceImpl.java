@@ -39,7 +39,10 @@ public class OrderServiceImpl implements OrderService {
                 "grab:event:" + request.getEventId(), 100, 200
         );
         if(!allowed) return Result.fail(ResultCode.FAIL_TO_GETTICKET);
-
+        //查数据库是否有订单 有就return 已购买
+        if(orderMapper.existsByUserAndEvent(request.getUserId(),request.getEventId())){
+            return (Result.fail("已购买,请勿重复购票"));
+        }
         //扣库存
         boolean deducted = stockService.stockDeductScript(
                 request.getEventId(),request.getTicketId());

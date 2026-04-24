@@ -47,7 +47,7 @@ Day 3 · 4月22日
 支付超时 · 前端 · 部署
 P6
 模拟支付确认接口
-POST /orders/{orderNo}/pay，状态→PAID；GET /orders/{orderNo} 查详情
+POST /orders/{orderNo}/pay，状态→PAID；GET /orders/{orderNo} 查详情 fine
 P6
 超时取消 + 回补库存
 Redis keyspace notification 或定时扫描，15 分钟未支付 → 取消 + INCRBY 回补

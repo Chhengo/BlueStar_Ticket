@@ -3,10 +3,13 @@ package com.ticket.user.common;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.management.loading.MLetContent;
+
 @Getter
 @AllArgsConstructor
 public enum ResultCode {
     SUCCESS(200, "操作成功"),
+    FAIL(40,"操作失败"),
     USERNAME_DUPLICATE(410,"用户名已存在"),
     USERNAME_OR_PASSWOR_ERROR(401, "用户名或密码错误"),
     USER_BANNED(403, "账号已被封禁"),

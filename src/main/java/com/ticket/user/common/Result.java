@@ -25,4 +25,7 @@ public class Result<T> {
     public static <T> Result<T> fail(ResultCode rc){
         return of(rc.getCode(), rc.getMsg(), null);
     }
+    public static <T> Result<T> fail(T data){
+        return of(ResultCode.FAIL.getCode(), ResultCode.FAIL.getMsg(), data);
+    }
 }
