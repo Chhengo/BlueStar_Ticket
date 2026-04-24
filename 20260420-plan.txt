@@ -36,12 +36,12 @@ P5
 抢票 → MQ → 订单写库，Postman 验证 orderNo 返回与数据库一致
 明天创建的 Issues 已复制 ✓
 
-[P4] 令牌桶限流 Lua 脚本实现
-[P4] 扣库存 Lua 脚本 + 并发单测
-[P4] 抢票接口 /orders/grab 实现
-[P5] Kafka topic 配置与生产者
-[P5] 消费者幂等处理 + 落单逻辑
-[P5] 抢票全链路联调验证
+[P4] 令牌桶限流 Lua 脚本实现 fine
+[P4] 扣库存 Lua 脚本 + 并发单测 fine
+[P4] 抢票接口 /orders/grab 实现 fine
+[P5] Kafka topic 配置与生产者 fine
+[P5] 消费者幂等处理 + 落单逻辑 fine
+[P5] 抢票全链路联调验证 fine
 
 Day 3 · 4月22日
 支付超时 · 前端 · 部署

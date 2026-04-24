@@ -8,10 +8,10 @@
         (
             order_no,       -- 订单编号
             user_id,        -- 用户ID
-            ticket_type_id, -- 门票类型ID
+            ticket_id, -- 门票类型ID
             status,         -- 订单状态
-            created_at,     -- 创建时间
-            updated_at,     -- 更新时间
+            created_time,     -- 创建时间
+            updated_time,     -- 更新时间
             event_id        -- 活动ID
         )
         values
@@ -25,4 +25,8 @@
                 #{eventId}      -- 对应 event_id
             );
     </insert>
+    <select id="getOrderByOrderNo" resultType="com.ticket.orders.entity.Order">
+        select order_no,user_id,ticket_id,status,created_time,updated_time,event_id from ticket.t_order where order_no = #{orderNo}
+    </select>
+
 </mapper>

@@ -3,11 +3,14 @@ package com.ticket.orders.service.impl;
 import com.ticket.kafka.entity.OrderMessage;
 import com.ticket.kafka.service.KafkaProducerService;
 import com.ticket.orders.entity.GrabRequest;
+import com.ticket.orders.entity.Order;
+import com.ticket.orders.mapper.OrderMapper;
 import com.ticket.orders.service.OrderService;
 import com.ticket.redis.service.RateLimiterService;
 import com.ticket.redis.service.StockService;
 import com.ticket.user.common.Result;
 import com.ticket.user.common.ResultCode;
+import com.ticket.user.mapper.UserMapper;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,6 +27,10 @@ public class OrderServiceImpl implements OrderService {
     private StockService stockService;
     @Autowired
     private KafkaProducerService kafkaProducerService;
+    @Autowired
+    private OrderMapper orderMapper;
+    @Autowired
+    private UserMapper userMapper;
     @Override
     public Result<String> grab(GrabRequest request) {
         //请求通过限流 扣库存后 再包装为成功信息 如果限流或者库存就失败 返回false
@@ -50,6 +57,13 @@ public class OrderServiceImpl implements OrderService {
         kafkaProducerService.sendOrderMessage(message);
         //如果用户已经买过该活动的票 就直接拒绝再次买票 已经买过了
         return Result.success("抢票成功，订单处理中");
+    }
+
+    @Override
+    public Result<Order> getOrderByOrderNo(String orderNo) {
+        Order order = orderMapper.getOrderByOrderNo(orderNo);
+        order.setUserName(userMapper.getuserNameById(order.getUserId()));
+        return Result.success(ResultCode.SUCCESS, order);
     }
 
     private String generateOrderNo(){

@@ -22,4 +22,6 @@ public interface OrderMapper extends BaseMapper<Order> {
     };
 
     void insertOrder(Order order);
+
+    Order getOrderByOrderNo(String orderNo);
 }
