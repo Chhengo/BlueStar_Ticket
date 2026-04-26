@@ -11,12 +11,14 @@ import com.ticket.redis.service.StockService;
 import com.ticket.user.common.Result;
 import com.ticket.user.common.ResultCode;
 import com.ticket.user.mapper.UserMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -64,9 +66,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Result<Order> getOrderByOrderNo(String orderNo) {
+        Order order = getOrder(orderNo);
+        if(order.getStatus() == 1){
+            return Result.success(ResultCode.SUCCESS, order);
+        }
+        return Result.fail(ResultCode.FAIL);
+    }
+
+    private Order getOrder(String orderNo) {
         Order order = orderMapper.getOrderByOrderNo(orderNo);
         order.setUserName(userMapper.getuserNameById(order.getUserId()));
-        return Result.success(ResultCode.SUCCESS, order);
+        return order;
     }
 
     private String generateOrderNo(){

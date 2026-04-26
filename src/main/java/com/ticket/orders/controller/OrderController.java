@@ -20,7 +20,7 @@ public class OrderController {
     public Result<String> grabTicket(@RequestBody GrabRequest request){
         return orderService.grab(request);
     }
-    @GetMapping("/pay")
+    @GetMapping("/getPaidOrder")
     public Result<Order> getOrder(@RequestBody Order order){
         return orderService.getOrderByOrderNo(order.getOrderNo());
     }

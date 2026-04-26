@@ -42,12 +42,12 @@ public class KafkaConsumerService {
         order.setUserId(message.getUserId());
         order.setUserName(message.getUserName());
         order.setTicketId(message.getTicketId());
-        order.setStatus(1);
-        //0 支付取消 1 已支付 2 已重复购买 回档
+        order.setExpiredTime(LocalDateTime.now().plusMinutes(15));
+        order.setStatus(0);
+        //0 未支付 1 已支付 2 已取消 回档
         order.setCreatedTime(LocalDateTime.now());
 
         orderMapper.insertOrder(order);
-
         ticketsMapper.decrStock(order.getTicketId());
     }
 }

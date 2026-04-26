@@ -1,0 +1,87 @@
+-- P3: orders 表新增字段 + 索引
+ALTER TABLE orders
+    ADD COLUMN IF NOT EXISTS status      TINYINT      NOT NULL DEFAULT 0
+        COMMENT '0=待支付 1=已支付 2=已取消(预留)',
+    ADD COLUMN IF NOT EXISTS expire_time DATETIME     NOT NULL
+        COMMENT '订单过期时间（抢票时写入，固定+15分钟）',
+    ADD COLUMN IF NOT EXISTS pay_time    DATETIME     NULL
+        COMMENT '实际支付时间';
+
+-- 联合索引：兜底定时任务扫描 status=0 且已超时的废单
+CREATE INDEX IF NOT EXISTS idx_status_expire
+    ON orders (status, expire_time);
+
+
+P1 · 模拟支付 PayService
+五重校验串联：
+订单存在 → 用户归属（防越权）→ 未重复支付 → status=0 → expire_time 未过。支付成功后用
+UPDATE ... WHERE status=0 做 CAS 并发兜底，
+然后主动删除 Redis 过期监听 key，切断超时回补链路。
+P2 · 超时取消 OrderCancelService（被两个入口复用）
+
+OrderExpireListener 接收 Redis __keyevent@0__:expired，解析 key → 调取消
+取消顺序：先 Redis 回补 +1，再 MySQL 物理删除（对应异常情况四的兜底思路）
+幂等保护：DELETE 返回 0 时说明已被处理，回滚 Redis -1 防止库存虚增
+
+OrderCleanupScheduler（兜底定时任务，必须项）
+每 5 分钟扫 status=0 AND expire_time < now()，走 idx_status_expire 索引。
+单条失败不阻塞其他，下次调度自动重试。
+P3 · DB — SQL 增加三个字段 + 联合索引，
+OrderMapper 查重条件锁定 status IN (0,1)，物理删除保证查重放行。
+
+// 原来（bug）：无论传什么 rc，永远返回 SUCCESS 的 code
+public static <T> Result<T> success(ResultCode rc, T data) {
+    return of(rc.SUCCESS.getCode(), ...);  // ← 静态枚举成员，等于写死了
+
+项目：高并发抢票系统
+已完成模块：Events CRUD、票档、Redis预缓存、限流Lua、扣库存Lua、抢票接口、
+Kafka生产消费、全链路联调
+今日实现的三个模块
+
+P3 · 数据库
+orders 表新增：status（0待支付/1已支付）、expire_time（+15分钟）、pay_time
+新增索引：idx_status_expire(status, expire_time)
+
+P1 · 模拟支付 POST /orders/pay
+五重校验：订单存在 → userId归属 → status=0 → 未超时 → CAS UPDATE防并发
+支付成功后主动 DEL Redis过期监听key，防止已支付订单15分钟后触发回补
+
+P2 · 超时取消链路
+抢票时写入 ticket:order:{eventId}:{ticketId}:{userId}:{orderNo}，TTL=900s
+OrderExpireListener 监听 key 过期事件 → 触发取消
+OrderCancelService 执行：Redis库存+1 → MySQL物理删除废单
+OrderCleanupScheduler 每5分钟兜底扫描
+
+今日暴露的设计问题与结论
+问题一：定时任务职责混乱 原代码把监听器和定时任务复用同一个 doCancel()，导致定时任务也去做 Redis+1，但定时任务扫到的废单前提是监听器已经+1过了，重复+1导致库存虚增。
+结论：监听器职责 = Redis+1 + MySQL DELETE。定时任务职责 = 只做 MySQL DELETE，不碰Redis。能被定时任务扫到的废单，一定是监听器已经+1但DELETE失败留下的，库存已经回补过了。
+问题二：引入了不必要的复杂度 中途引入了 stock_returned 字段和"Redis宕机"场景，超出当前阶段需求，把逻辑搞复杂了。
+结论：先实现最基础的链路，不过度设计。
+
+当前最终正确逻辑（新对话基准）
+
+抢票成功
+  → Redis库存-1
+  → MySQL创建订单(status=0, expire_time=now+15min)
+  → Redis写入过期监听key(TTL=900s)
+
+用户15分钟内支付
+  → MySQL status=0→1，写pay_time
+  → DEL过期监听key（切断回补链路）
+
+用户超时未支付
+  → 过期监听key TTL归零
+  → OrderExpireListener收到事件
+  → Redis库存+1（回补）
+  → MySQL物理删除废单
+
+主链路失败兜底（监听器+1成功，DELETE失败）
+  → MySQL废单仍存在(status=0, expireTime已过)
+  → OrderCleanupScheduler每5分钟扫一次
+  → 直接DELETE废单（不碰Redis，库存已回补）
+  → DELETE失败下次继续扫，直到成功
+
+查重逻辑：status IN (0,1) 双拦截，物理删除保证放行。
+
+
+

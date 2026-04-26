@@ -20,7 +20,7 @@ public class Result<T> {
         return of(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(), data);
     }
     public static <T> Result<T> success(ResultCode rc,T data){
-        return of(rc.SUCCESS.getCode(), rc.SUCCESS.getMsg(), data);
+        return of(rc.getCode(), rc.getMsg(), data);
     }
     public static <T> Result<T> fail(ResultCode rc){
         return of(rc.getCode(), rc.getMsg(), null);
