@@ -6,6 +6,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -52,4 +53,31 @@ public class RedisConfig {
         return defaultRedisScript;
     }
 
+    @Bean
+    public DefaultRedisScript<Long> stockIncrementScript(){
+        DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript();
+        defaultRedisScript.setLocation(new ClassPathResource("lua/StockIncrement.lua"));
+        defaultRedisScript.setResultType(Long.class);
+        return defaultRedisScript;
+    }
+    /**
+     * Redis 配置：
+     *  1. 开启 Keyspace Notification（监听 key 过期事件）
+     *  2. 注册监听容器
+     *
+     * 注意：需要在 Redis 服务端开启 notify-keyspace-events Ex
+     *  方式一（application.yml 中 Spring 自动配置）：
+     *    spring.data.redis.notify-keyspace-events: Ex
+     *  方式二（redis-cli）：
+     *    CONFIG SET notify-keyspace-events Ex
+     *
+     * E = Keyevent events（key 事件通知）
+     * x = 过期事件
+     */
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory){
+        RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
+        redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
+        return redisMessageListenerContainer;
+    }
 }

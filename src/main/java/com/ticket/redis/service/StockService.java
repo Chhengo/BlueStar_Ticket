@@ -19,6 +19,9 @@ public class StockService {
     @Qualifier("StockDeductScript")
     @Autowired
     private DefaultRedisScript<Long> stockDeductScript;
+    @Qualifier("stockIncrementScript")
+    @Autowired
+    private DefaultRedisScript<Long> stockIncrementScript;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     //注入redis客户端 库存自扣减脚本
@@ -37,5 +40,13 @@ public class StockService {
                 Collections.singletonList(key) //为啥不能直接放个key
         );
         return Long.valueOf(1L).equals(result);
+    }
+
+    public void stockIncrement(Long eventId, Long ticketId) {
+        String key = "ticket:stock:" + eventId + ":" + ticketId;
+        stringRedisTemplate.execute(
+                stockIncrementScript,
+                Collections.singletonList(key)
+        );
     }
 }
