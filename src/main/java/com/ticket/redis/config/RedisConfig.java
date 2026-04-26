@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -75,9 +76,16 @@ public class RedisConfig {
      * x = 过期事件
      */
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory){
-        RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
-        redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
-        return redisMessageListenerContainer;
+    public RedisMessageListenerContainer redisMessageListenerContainer(
+            RedisConnectionFactory factory, StringRedisTemplate stringRedisTemplate) {
+        // 启动时自动配置 Redis 服务端开启 key 过期通知
+        stringRedisTemplate.getConnectionFactory()
+                .getConnection()
+                .serverCommands()
+                .setConfig("notify-keyspace-events", "Ex");
+
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(factory);
+        return container;
     }
 }
