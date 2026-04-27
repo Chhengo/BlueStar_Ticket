@@ -73,6 +73,12 @@ public class OrderServiceImpl implements OrderService {
         return Result.fail(ResultCode.FAIL);
     }
 
+    @Override
+    public Order getByOrderNo(String orderNo) {
+        Order order = orderMapper.getOrderByOrderNo(orderNo);
+        return order;
+    }
+
     private Order getOrder(String orderNo) {
         Order order = orderMapper.getOrderByOrderNo(orderNo);
         order.setUserName(userMapper.getuserNameById(order.getUserId()));

@@ -1,0 +1,240 @@
+<!--&lt;!&ndash; -->
+<!--    BlueStar_Ticket 测试依赖配置-->
+<!--    -->
+<!--    将以下依赖添加到你的 pom.xml 的 <dependencies> 部分-->
+<!--    这些是运行完整测试套件所需的所有依赖-->
+<!--&ndash;&gt;-->
+
+<!--&lt;!&ndash; ========== 核心测试依赖 ========== &ndash;&gt;-->
+
+<!--&lt;!&ndash; Spring Boot Test - 核心测试框架 &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>org.springframework.boot</groupId>-->
+<!--    <artifactId>spring-boot-starter-test</artifactId>-->
+<!--    <scope>test</scope>-->
+<!--    <exclusions>-->
+<!--        <exclusion>-->
+<!--            <groupId>org.junit.vintage</groupId>-->
+<!--            <artifactId>junit-vintage-engine</artifactId>-->
+<!--        </exclusion>-->
+<!--    </exclusions>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; JUnit 5 (Jupiter) - 已包含在 spring-boot-starter-test 中 &ndash;&gt;-->
+<!--&lt;!&ndash; Mockito - 已包含在 spring-boot-starter-test 中 &ndash;&gt;-->
+<!--&lt;!&ndash; AssertJ - 已包含在 spring-boot-starter-test 中 &ndash;&gt;-->
+
+<!--&lt;!&ndash; ========== REST API 测试 ========== &ndash;&gt;-->
+
+<!--&lt;!&ndash; REST Assured - API 测试框架 &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>io.rest-assured</groupId>-->
+<!--    <artifactId>rest-assured</artifactId>-->
+<!--    <version>5.3.0</version>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; JSON Path - JSON 断言 &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>io.rest-assured</groupId>-->
+<!--    <artifactId>json-path</artifactId>-->
+<!--    <version>5.3.0</version>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; ========== 内存数据库 (H2) ========== &ndash;&gt;-->
+
+<!--&lt;!&ndash; H2 Database - 用于测试的内存数据库 &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>com.h2database</groupId>-->
+<!--    <artifactId>h2</artifactId>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; ========== Embedded Redis (可选) ========== &ndash;&gt;-->
+
+<!--&lt;!&ndash; Embedded Redis Server - 用于不依赖外部Redis的测试 &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>it.ozimov</groupId>-->
+<!--    <artifactId>embedded-redis</artifactId>-->
+<!--    <version>0.7.3</version>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; ========== Testcontainers (推荐) ========== &ndash;&gt;-->
+
+<!--&lt;!&ndash; Testcontainers - Docker 容器化测试环境 &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>org.testcontainers</groupId>-->
+<!--    <artifactId>testcontainers</artifactId>-->
+<!--    <version>1.19.0</version>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; Testcontainers MySQL &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>org.testcontainers</groupId>-->
+<!--    <artifactId>mysql</artifactId>-->
+<!--    <version>1.19.0</version>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; Testcontainers Kafka &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>org.testcontainers</groupId>-->
+<!--    <artifactId>kafka</artifactId>-->
+<!--    <version>1.19.0</version>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; Testcontainers JUnit 5 集成 &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>org.testcontainers</groupId>-->
+<!--    <artifactId>junit-jupiter</artifactId>-->
+<!--    <version>1.19.0</version>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; ========== 性能测试 ========== &ndash;&gt;-->
+
+<!--&lt;!&ndash; JMH - Java 微基准测试框架 (可选) &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>org.openjdk.jmh</groupId>-->
+<!--    <artifactId>jmh-core</artifactId>-->
+<!--    <version>1.36</version>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--<dependency>-->
+<!--    <groupId>org.openjdk.jmh</groupId>-->
+<!--    <artifactId>jmh-generator-annprocess</artifactId>-->
+<!--    <version>1.36</version>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; ========== 代码覆盖率 ========== &ndash;&gt;-->
+
+<!--&lt;!&ndash; JaCoCo - 已通过 Maven 插件配置 &ndash;&gt;-->
+
+<!--&lt;!&ndash; ========== 其他测试工具 ========== &ndash;&gt;-->
+
+<!--&lt;!&ndash; WireMock - HTTP Mock Server (可选) &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>com.github.tomakehurst</groupId>-->
+<!--    <artifactId>wiremock-jre8</artifactId>-->
+<!--    <version>2.35.0</version>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; Awaitility - 异步测试工具 (可选) &ndash;&gt;-->
+<!--<dependency>-->
+<!--    <groupId>org.awaitility</groupId>-->
+<!--    <artifactId>awaitility</artifactId>-->
+<!--    <version>4.2.0</version>-->
+<!--    <scope>test</scope>-->
+<!--</dependency>-->
+
+<!--&lt;!&ndash; ========================================================================-->
+<!--     Maven 插件配置 - 添加到 <build><plugins> 部分-->
+<!--     ======================================================================== &ndash;&gt;-->
+
+<!--&lt;!&ndash;-->
+<!--<build>-->
+<!--    <plugins>-->
+<!--        -->
+<!--        &lt;!&ndash; Maven Surefire Plugin - 运行单元测试 &ndash;&gt;-->
+<!--        <plugin>-->
+<!--            <groupId>org.apache.maven.plugins</groupId>-->
+<!--            <artifactId>maven-surefire-plugin</artifactId>-->
+<!--            <version>2.22.2</version>-->
+<!--            <configuration>-->
+<!--                <includes>-->
+<!--                    <include>**/*Test.java</include>-->
+<!--                </includes>-->
+<!--                <excludes>-->
+<!--                    <exclude>**/*IntegrationTest.java</exclude>-->
+<!--                </excludes>-->
+<!--            </configuration>-->
+<!--        </plugin>-->
+
+<!--        &lt;!&ndash; Maven Failsafe Plugin - 运行集成测试 &ndash;&gt;-->
+<!--        <plugin>-->
+<!--            <groupId>org.apache.maven.plugins</groupId>-->
+<!--            <artifactId>maven-failsafe-plugin</artifactId>-->
+<!--            <version>2.22.2</version>-->
+<!--            <executions>-->
+<!--                <execution>-->
+<!--                    <goals>-->
+<!--                        <goal>integration-test</goal>-->
+<!--                        <goal>verify</goal>-->
+<!--                    </goals>-->
+<!--                </execution>-->
+<!--            </executions>-->
+<!--            <configuration>-->
+<!--                <includes>-->
+<!--                    <include>**/*IntegrationTest.java</include>-->
+<!--                </includes>-->
+<!--            </configuration>-->
+<!--        </plugin>-->
+
+<!--        &lt;!&ndash; JaCoCo Plugin - 代码覆盖率 &ndash;&gt;-->
+<!--        <plugin>-->
+<!--            <groupId>org.jacoco</groupId>-->
+<!--            <artifactId>jacoco-maven-plugin</artifactId>-->
+<!--            <version>0.8.10</version>-->
+<!--            <executions>-->
+<!--                <execution>-->
+<!--                    <goals>-->
+<!--                        <goal>prepare-agent</goal>-->
+<!--                    </goals>-->
+<!--                </execution>-->
+<!--                <execution>-->
+<!--                    <id>report</id>-->
+<!--                    <phase>test</phase>-->
+<!--                    <goals>-->
+<!--                        <goal>report</goal>-->
+<!--                    </goals>-->
+<!--                </execution>-->
+<!--                <execution>-->
+<!--                    <id>jacoco-check</id>-->
+<!--                    <goals>-->
+<!--                        <goal>check</goal>-->
+<!--                    </goals>-->
+<!--                    <configuration>-->
+<!--                        <rules>-->
+<!--                            <rule>-->
+<!--                                <element>PACKAGE</element>-->
+<!--                                <limits>-->
+<!--                                    <limit>-->
+<!--                                        <counter>LINE</counter>-->
+<!--                                        <value>COVEREDRATIO</value>-->
+<!--                                        <minimum>0.60</minimum>-->
+<!--                                    </limit>-->
+<!--                                </limits>-->
+<!--                            </rule>-->
+<!--                        </rules>-->
+<!--                    </configuration>-->
+<!--                </execution>-->
+<!--            </executions>-->
+<!--        </plugin>-->
+
+<!--        &lt;!&ndash; OWASP Dependency Check - 安全扫描 &ndash;&gt;-->
+<!--        <plugin>-->
+<!--            <groupId>org.owasp</groupId>-->
+<!--            <artifactId>dependency-check-maven</artifactId>-->
+<!--            <version>8.3.1</version>-->
+<!--            <configuration>-->
+<!--                <failBuildOnCVSS>7</failBuildOnCVSS>-->
+<!--            </configuration>-->
+<!--            <executions>-->
+<!--                <execution>-->
+<!--                    <goals>-->
+<!--                        <goal>check</goal>-->
+<!--                    </goals>-->
+<!--                </execution>-->
+<!--            </executions>-->
+<!--        </plugin>-->
+
+<!--    </plugins>-->
+<!--</build>-->
+<!--&ndash;&gt;-->

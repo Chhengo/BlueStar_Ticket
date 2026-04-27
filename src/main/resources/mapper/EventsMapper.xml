@@ -40,14 +40,14 @@
     </update>
 
     <delete id="deleteEvent" parameterType="Long">
-        DELETE FROM ticket.t_event WHERE id = #{id}
+        DELETE FROM t_event WHERE id = #{id}
     </delete>
 
     <select id="getById" parameterType="Long" resultType="com.ticket.events.entity.Events">
-        SELECT * FROM ticket.t_event WHERE id = #{id}
+        SELECT * FROM t_event WHERE id = #{id}
     </select>
     <select id="getLists" resultType="com.ticket.events.entity.Events">
-        select * from ticket.t_event
+        select * from t_event
         where status = 1
     </select>
 

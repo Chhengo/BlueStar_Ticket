@@ -1,0 +1,110 @@
+# BlueStar_Ticket 测试环境配置
+# 用于单元测试、集成测试、CI/CD 流水线
+
+spring:
+  # 应用配置
+  application:
+    name: BlueStar_Ticket-Test
+  
+  # 数据源配置 - 使用 H2 内存数据库 (可选，如果想用真实MySQL则注释掉H2配置)
+  datasource:
+#    # 选项1: H2 内存数据库 (快速、独立、适合CI环境)
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    username: sa
+#    password:
+    
+    # 选项2: 真实 MySQL (适合本地集成测试)
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/ticket?useUnicode=true&characterEncoding=utf-8
+      username: root
+      password: 123456
+  
+  # JPA/Hibernate 配置 (用于H2数据库时自动建表)
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop  # 测试时自动创建/删除表
+    show-sql: false          # 不在测试中打印SQL
+  
+  # Redis 配置
+  data:
+    redis:
+      host: 192.168.227.142
+      port: 6379
+      password: 123456       # 如果Redis没有密码则留空或删除此行
+      database: 1            # 使用独立的测试数据库
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 20
+          max-wait: -1ms
+          max-idle: 10
+          min-idle: 2
+  
+  # Kafka 配置 (测试环境可选)
+  kafka:
+    bootstrap-servers: 192.168.227.142:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+    consumer:
+      group-id: BlueStar_Ticket-test-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "com.ticket.*"
+  
+  # Kafka Topic 配置
+  ticket:
+    kafka:
+      topic:
+        order-create: ticket.order.create.test
+
+# JWT 配置
+jwt:
+  secret: TESTSECRETKEY1234567890abcdefghijklmnopqrstuvwxyz
+  expiration: 86400000  # 24小时
+
+# MyBatis 配置
+mybatis:
+  configuration:
+#    log-impl: org.apache.ibatis.logging.nolog.NoLoggingImpl  # 测试时不打印SQL日志
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.ticket.entity
+
+# 日志配置
+logging:
+  level:
+    root: WARN                           # 根日志级别设为 WARN
+    com.ticket: INFO                     # 项目日志级别
+    org.springframework: WARN            # Spring 框架日志
+    org.springframework.test: INFO       # 测试相关日志
+    org.springframework.boot.test: INFO  # Spring Boot 测试日志
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 测试专用配置
+test:
+  # 是否启用真实的外部服务
+  enable-real-redis: true      # 是否使用真实Redis (false则用嵌入式)
+  enable-real-mysql: false     # 是否使用真实MySQL (false则用H2)
+  enable-real-kafka: false     # 是否使用真实Kafka (false则Mock)
+  
+  # 性能测试基准
+  performance:
+    max-response-time-ms: 200  # 接口最大响应时间
+    min-tps: 100               # 最小TPS
+  
+  # 并发测试配置
+  concurrency:
+    thread-count: 100          # 并发线程数
+    stock-count: 10            # 测试库存数
+
+# Spring Security 配置 (测试环境可能需要禁用某些安全检查)
+# 如果测试中遇到403/401问题，可以考虑添加以下配置：
+# security:
+#   ignored: /**

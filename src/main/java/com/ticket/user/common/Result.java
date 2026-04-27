@@ -2,15 +2,16 @@ package com.ticket.user.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor  // ✅ 添加这个注解
 @AllArgsConstructor(staticName = "of")
 // 防止业务产生不统一数据 不方便查询日志
 public class Result<T> {
     private Integer code;
     private String msg;
     private T data;
-
     public Result(Integer code, String msg) {
         this.code = code;
         this.msg = msg;

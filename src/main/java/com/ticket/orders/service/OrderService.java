@@ -8,4 +8,6 @@ public interface OrderService {
     Result<String> grab(GrabRequest request);
 
     Result<Order> getOrderByOrderNo(String orderNo);
+
+    Order getByOrderNo(String orderNo);
 }

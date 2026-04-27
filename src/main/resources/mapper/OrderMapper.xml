@@ -4,7 +4,7 @@
 
 <mapper namespace="com.ticket.orders.mapper.OrderMapper">
     <insert id="insertOrder">
-        insert into ticket.t_order
+        insert into t_order
         (
             order_no,       -- 订单编号
             user_id,        -- 用户ID
@@ -20,13 +20,13 @@
                 #{userId},      -- 对应 user_id
                 #{ticketId},    -- 对应 ticket_type_id
                 #{status},      -- 对应 status
-                #{createTime},  -- 对应 created_at
-                #{createTime},  -- 对应 updated_at（和创建时间一致）
+                #{createdTime},  -- 对应 created_at
+                #{createdTime},  -- 对应 updated_at（和创建时间一致）
                 #{eventId}      -- 对应 event_id
             );
     </insert>
     <select id="getOrderByOrderNo" resultType="com.ticket.orders.entity.Order">
-        select order_no,user_id,ticket_id,status,created_time,updated_time,event_id from ticket.t_order where order_no = #{orderNo}
+        select order_no,user_id,ticket_id,status,created_time,updated_time,event_id from t_order where order_no = #{orderNo}
     </select>
 
 </mapper>

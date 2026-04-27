@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/v1/api")
+@RequestMapping("/api/v1")
 @Slf4j
 @RequiredArgsConstructor
 public class PayController {
